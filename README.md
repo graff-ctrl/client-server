@@ -65,4 +65,5 @@ Create a small Powerpoint that will describe your RPC's  and program. It should 
 
 
 Server: g++ -o server lpthread server.cpp 
-Clinent: g++ -o client client.cpp
+
+Client: g++ -o client client.cpp
