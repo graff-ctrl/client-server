@@ -62,3 +62,7 @@ sem_wait
 Run the program . Your program should still have some sort of delay, but it should also execute all of the RPC's that you have created.
 Run the program multiple times at once (5 occurence). Please have the diagnostic output messages show up in relevant places.
 Create a small Powerpoint that will describe your RPC's  and program. It should be about a 10 minute presentation (as a general rule one slide per minute)
+
+
+Server: g++ -o server lpthread server.cpp 
+Clinent: g++ -o client client.cpp
