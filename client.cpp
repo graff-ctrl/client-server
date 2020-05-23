@@ -9,6 +9,7 @@
 #include <string.h>
 #define PORT 12008
 
+//Funtion to connect to server.
 int connectRPC()
 {
     // Input Arguments are:
