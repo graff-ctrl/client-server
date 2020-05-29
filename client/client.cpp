@@ -10,12 +10,15 @@
 #define PORT 12008
 
 //Funtion to connect to server.
-int connectRPC()
+int connectRPC(char *userName, char *password)
 {
     // Input Arguments are:
     // username
     // password
     // input format="rpc=connect;username=<Your user>;password=<Your password>;"
+    char connect[50];
+    strcpy(connect, "rpc=connect;username="+userName+";password="+password);
+    printf(connect);
     // Output arguments are:
     // status     (This will be set to 1 if success and -1 if error)
     // error      ( This will be to blank or an error message)
@@ -100,7 +103,11 @@ int disconnectServer(int sock)
 
 int main(int argc, char const *argv[])
 {
-    int sock = 0;
+    char username = "usernametest";
+    char password = "passwordtest";
+    connectRPC(username,password);
+
+    /*int sock = 0;
     int status;
     char buff[128];
     // We will find out how many times to send our hello
@@ -116,7 +123,7 @@ int main(int argc, char const *argv[])
     strcpy(buff, "QUIT");
     incrementRPC(sock, buff);
 
-    status = disconnectServer(sock);
+    status = disconnectServer(sock);*/
 
-    return status;
+    return 0;//return status;
 }
