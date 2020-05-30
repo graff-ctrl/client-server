@@ -175,7 +175,7 @@ int disconnectServer(int sock)
     status = close(sock);
     return status;
 }
-int Connect(char *pszUserName, char *pszPass)
+/*int Connect(char *pszUserName, char *pszPass)
 {
     printf("Username = %s  Password = %s", pszUserName, pszPass);
     return 0;
@@ -219,14 +219,14 @@ int processRPC(char *szTest1){
             status = Connect(pszUserValue, pszPassValue);
         }
     }
-}
+}*/
 int main(int argc, char const *argv[])
 {
     // Testing for string parsing below
 //    const char *szTest1 = "rpc=connect;user=mike;password=123;";
 //    int status;
 //    status = processRPC((char *)szTest1);
-
+// send port number from server in command line (i.e. ./client 127.0.0.1 12008)
     int sock = 0;
     int status;
     char buff[128];
@@ -234,9 +234,18 @@ int main(int argc, char const *argv[])
 
     status = connectToServer((char *) argv[1], (char *) argv[2], sock);
     for (int i = 0; i < 20; i++) {
-        strcpy(buff, "1");
+        //connect to server
+        //ask for un and passord
+        //validate from server
+        //connect function
+        //rpc call
+        //sleep
+        //rpc call
+        //sleep
+        //rpc call;
+        strcpy(buff, "QUOTE");
         incrementRPC(sock, buff);
-        sleep(5);
+        sleep(2);
         strcpy(buff, "15");
         incrementRPC(sock, buff);
     }

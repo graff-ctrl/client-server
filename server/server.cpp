@@ -13,6 +13,7 @@
 #include <pthread.h>
 
 using namespace std;
+//Chang port to your unique port
 #define PORT 12008
 
 // Class to set up server
@@ -228,6 +229,9 @@ void *rpcThread(void *arg)
                     ,pntrServerStartup->getRpcTotals());
             pthread_exit(status);
         }
+        if (strcmp(buffer, "QUOTE") == 0){
+            printf("Quote for socket %d: Make the most of today.", nSocket);
+        }
         int incAmt = atoi((char const*) buffer);
         connectionObj->addSumAmount(incAmt);
         connectionObj->addRpcAmount();
@@ -262,7 +266,7 @@ int main(int argc, char const *arg[])
             printf("Error");
             status = -1;
         }
-        //server->chatter(newSocket);
+        server->chatter(newSocket);
         serverDataObj->setSocket(newSocket);
         pthread_create(&pthread, NULL, rpcThread, (void *) serverDataObj);
         printf("Server started thread.");
