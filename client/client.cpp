@@ -2,6 +2,7 @@
 
 // Client side C/C++ program to demonstrate Socket programming
 #include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -89,17 +90,17 @@ public:
 
 };
 //Funtion to connect to server.
-int connectRPC(char *userName, char *password)
+char connectRPC(char *userName, char *password)
 {
-    // Input Arguments are:
-    // username
-    // password
-    // input format="rpc=connect;username=<Your user>;password=<Your password>;"
-    // Output arguments are:
-    // status     (This will be set to 1 if success and -1 if error)
-    // error      ( This will be to blank or an error message)
-    // output format="status=<error status>;error=<error or blank>
-    return 0;
+    const char *un = "rpc=connect;username=";
+    const char *pw = ";password=";
+    char buffer[1024];
+    strcpy(buffer, un);
+    strcat(buffer, userName);
+    strcat(buffer, pw);
+    strcat(buffer, password);
+    printf("%s", buffer);
+    return *buffer;
 }
 
 int disconnectRPC()
@@ -175,74 +176,29 @@ int disconnectServer(int sock)
     status = close(sock);
     return status;
 }
-/*int Connect(char *pszUserName, char *pszPass)
-{
-    printf("Username = %s  Password = %s", pszUserName, pszPass);
-    return 0;
-}
-int processRPC(char *szTest1){
-    // Create a couple of buffers, and see if works
-    //const char *szTest1 = "rpc=connect;user=mike;password=123;";
-    RawKeyValueString *pRawKey = new RawKeyValueString((char *)szTest1);
-    KeyValue rpcKeyValue;
-    char *pszRpcKey;
-    char *pszRpcValue;
 
-    // Figure out which rpc it is
-
-    pRawKey->getNextKeyValue(rpcKeyValue);
-    pszRpcKey = rpcKeyValue.getKey();
-    pszRpcValue = rpcKeyValue.getValue();
-
-    if (strcmp(pszRpcKey, "rpc") == 0)
-    {
-        if (strcmp(pszRpcValue, "connect") == 0)
-        {
-            // Get the next two arguments (user and password);
-            KeyValue userKeyValue;
-            KeyValue passKeyValue;
-
-            char *pszUserKey;
-            char *pszUserValue;
-            char *pszPassKey;
-            char *pszPassValue;
-            int status;
-
-            pRawKey->getNextKeyValue(userKeyValue);
-            pszUserKey = userKeyValue.getKey();
-            pszUserValue = userKeyValue.getValue();
-
-            pRawKey->getNextKeyValue(passKeyValue);
-            pszPassKey = passKeyValue.getKey();
-            pszPassValue = passKeyValue.getValue();
-
-            status = Connect(pszUserValue, pszPassValue);
-        }
-    }
-}*/
 int main(int argc, char const *argv[])
 {
-    // Testing for string parsing below
-//    const char *szTest1 = "rpc=connect;user=mike;password=123;";
-//    int status;
-//    status = processRPC((char *)szTest1);
+
 // send port number from server in command line (i.e. ./client 127.0.0.1 12008)
     int sock = 0;
     int status;
+    int connect;
     char buff[128];
     // We will find out how many times to send our hello
 
-    status = connectToServer((char *) argv[1], (char *) argv[2], sock);
+    //status = connectToServer((char *) argv[1], (char *) argv[2], sock);
+    // Asking user to input credentials to connect to server (user input always in main).
+    char username[10];
+    char password[10];
+    std::cout << "\nEnter Username:";
+    std::cin >> username;
+    std::cout << "\nEnter Password:";
+    std::cin >> password;
+    strcpy(buff, (char *)(connectRPC(username, password)));
+    incrementRPC(sock, buff);
+
     for (int i = 0; i < 20; i++) {
-        //connect to server
-        //ask for un and passord
-        //validate from server
-        //connect function
-        //rpc call
-        //sleep
-        //rpc call
-        //sleep
-        //rpc call;
         strcpy(buff, "QUOTE");
         incrementRPC(sock, buff);
         sleep(2);
