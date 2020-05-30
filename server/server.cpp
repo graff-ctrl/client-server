@@ -292,6 +292,8 @@ void *rpcThread(void *arg)
     int valread;
     char buffer[1024] = {0};
     void *status = NULL;
+    const char *invalid = "INVALID";
+
 
     ServerSetup *pntrServerStartup = (ServerSetup *) arg;
     nSocket = pntrServerStartup->getSocket();
@@ -326,7 +328,7 @@ void *rpcThread(void *arg)
     return NULL;
 
 }
-int processRPC(char *szTest1){
+/*int processRPC(char *szTest1){
     // Create a couple of buffers, and see if works
     //const char *szTest1 = "rpc=connect;user=mike;password=123;";
     RawKeyValueString *pRawKey = new RawKeyValueString((char *)szTest1);
@@ -362,10 +364,11 @@ int processRPC(char *szTest1){
             pszPassKey = passKeyValue.getKey();
             pszPassValue = passKeyValue.getValue();
 
-            status = Connect(pszUserValue, pszPassValue);
+            //status = Connect(pszUserValue, pszPassValue);
         }
     }
-}
+    return 0;
+}*/
 int main(int argc, char const *arg[])
 {
     pthread_t pthread;
