@@ -10,97 +10,18 @@
 #include <string.h>
 #include <assert.h>
 #define PORT 12008
-class KeyValue
-{
-private:
-    char m_szKey[128];
-    char m_szValue[2048];
 
-public:
-
-    KeyValue() {};
-    void setKeyValue(char *pszBuff)
-    {
-        char *pch1;
-
-        // find out where the "=" sign is, and take everything to the left of the equal for the key
-        // go one beyond the = sign, and take everything else
-        pch1 = strchr(pszBuff, '=');
-        assert(pch1);
-        int keyLen = (int)(pch1 - pszBuff);
-        strncpy(m_szKey, pszBuff, keyLen);
-        m_szKey[keyLen] = 0;
-        strcpy(m_szValue, pszBuff + keyLen + 1);
-    }
-
-    char *getKey()
-    {
-        return m_szKey;
-    }
-
-    char *getValue()
-    {
-
-        return m_szValue;
-    }
-
-};
-class RawKeyValueString
-{
-private:
-
-    char m_szRawString[32768];
-    int m_currentPosition;
-    KeyValue *m_pKeyValue;
-    char *m_pch;
-public:
-
-    RawKeyValueString(char *szUnformattedString)
-    {
-        assert(strlen(szUnformattedString));
-        strcpy(m_szRawString, szUnformattedString);
-
-        m_pch = m_szRawString;
-
-    }
-    ~RawKeyValueString()
-    {
-        if (m_pKeyValue)
-            delete (m_pKeyValue);
-    }
-
-    void getNextKeyValue(KeyValue & keyVal)
-    {
-        // It will attempt to parse out part of the string all the way up to the ";", it will then create a new KeyValue object  with that partial string
-        // If it can;t it will return null;
-        char *pch1;
-        char szTemp[32768];
-
-        pch1 = strchr(m_pch, ';');
-        assert(pch1 != NULL);
-        int subStringSize = (int)(pch1 - m_pch);
-        strncpy(szTemp, m_pch, subStringSize);
-        szTemp[subStringSize] = 0;
-        m_pch = pch1 + 1;
-        if (m_pKeyValue)
-            delete (m_pKeyValue);
-        keyVal.setKeyValue(szTemp);
-
-    }
-
-};
 //Funtion to connect to server.
-char connectRPC(char *userName, char *password)
+int connectRPC(char *userName, char *password, char *buff)
 {
     const char *un = "rpc=connect;username=";
     const char *pw = ";password=";
-    char buffer[1024];
-    strcpy(buffer, un);
-    strcat(buffer, userName);
-    strcat(buffer, pw);
-    strcat(buffer, password);
-    printf("%s", buffer);
-    return *buffer;
+    strcpy(buff, un);
+    strcat(buff, userName);
+    strcat(buff, pw);
+    strcat(buff, password);
+    printf("%s", buff);
+    return 0;
 }
 
 int disconnectRPC()
@@ -183,19 +104,19 @@ int main(int argc, char const *argv[])
 // send port number from server in command line (i.e. ./client 127.0.0.1 12008)
     int sock = 0;
     int status;
-    int connect;
-    char buff[128];
+    char buff[1024];
     // We will find out how many times to send our hello
 
-    //status = connectToServer((char *) argv[1], (char *) argv[2], sock);
+    status = connectToServer((char *) argv[1], (char *) argv[2], sock);
     // Asking user to input credentials to connect to server (user input always in main).
-    char username[10];
-    char password[10];
+    char username[20];
+    char password[20];
+
     std::cout << "\nEnter Username:";
     std::cin >> username;
     std::cout << "\nEnter Password:";
     std::cin >> password;
-    strcpy(buff, (char *)(connectRPC(username, password)));
+    connectRPC(username,password, buff);
     incrementRPC(sock, buff);
 
     for (int i = 0; i < 20; i++) {
