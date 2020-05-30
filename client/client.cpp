@@ -222,11 +222,12 @@ int processRPC(char *szTest1){
 }
 int main(int argc, char const *argv[])
 {
-    const char *szTest1 = "rpc=connect;user=mike;password=123;";
-    int status;
-    status = processRPC((char *)szTest1);
+    // Testing for string parsing below
+//    const char *szTest1 = "rpc=connect;user=mike;password=123;";
+//    int status;
+//    status = processRPC((char *)szTest1);
 
-    /*int sock = 0;
+    int sock = 0;
     int status;
     char buff[128];
     // We will find out how many times to send our hello
@@ -242,7 +243,7 @@ int main(int argc, char const *argv[])
     strcpy(buff, "QUIT");
     incrementRPC(sock, buff);
 
-    status = disconnectServer(sock);*/
+    status = disconnectServer(sock);
 
-    return 0;//return status;
+    return status;
 }
