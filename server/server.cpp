@@ -132,7 +132,33 @@ void Advice(char *buffer)
 }
 void Tip(char *buffer)
 {
-    //CODE
+    // declare vars
+    // char TipList[][1024];
+    int listInd;
+
+    // create random number generator as class function?
+        // get random number w/in Tip list/database
+        // need to know size of Tip list/database to bound int generation
+        listInd = 1;
+
+    // access Tip list/database
+        // if list, read in .txt file at startup, save as class var
+        // would that require putting RPC calls in separate class?
+        // hardcoded for now
+        char TipList[][1024] = {"Get 8 hours of sleep",
+                                "Exercise for 30 minutes each day",
+                                "Take a break to stretch after sitting for long periods"};
+
+    // pull random tip from TipList
+    const char *curTip = TipList[listInd];
+
+    // append new line escape character
+    char *newstr = (char*)malloc(strlen(curTip) + 2);
+    strcpy(newstr, curTip);
+    strcat(newstr, "\n");
+
+    // overwrite buffer
+    strcpy(buffer, newstr);
 }
 
 // Function to parse buffer from client for RPC call.
@@ -188,6 +214,8 @@ int parseBuffer(char *buff)
         if (strcmp(pszRpcValue, "tip") == 0)
         {
             printf("Client wants a tip\n");
+            Tip(buff);
+            printf(buff);
         }
         if (strcmp(pszRpcValue, "advice") == 0)
         {

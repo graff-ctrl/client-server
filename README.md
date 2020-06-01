@@ -64,6 +64,6 @@ Run the program multiple times at once (5 occurence). Please have the diagnostic
 Create a small Powerpoint that will describe your RPC's  and program. It should be about a 10 minute presentation (as a general rule one slide per minute)
 
 
-Server: g++ -o server lpthread server.cpp 
+Server: g++ -o server -lpthread server.cpp
 
 Client: g++ -o client client.cpp

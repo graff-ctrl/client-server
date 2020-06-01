@@ -2,10 +2,20 @@
 <project version="4">
   <component name="PublishConfigData">
     <serverData>
-      <paths name="cs1">
+      <paths name="CS1">
         <serverdata>
           <mappings>
+            <mapping deploy="/CPSC_5042_02/client-server" local="$PROJECT_DIR$" />
+            <mapping local="" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="CS11">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$/client" web="/" />
             <mapping deploy="/client-server" local="$PROJECT_DIR$" web="/" />
+            <mapping local="" />
           </mappings>
         </serverdata>
       </paths>

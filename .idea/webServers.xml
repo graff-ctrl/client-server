@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="fc18a186-e022-4076-bff3-7269086aa9dc" name="CS1" url="http://cs1.seattleu.edu">
+        <fileTransfer host="cs1.seattleu.edu" port="22" rootFolder="/home/st/pfunda" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="0fd05c4a-43a4-41b9-b4a1-7ea46525ed8f" name="CS11" url="http://cs1.seattleu.edu">
+        <fileTransfer host="cs1.seattleu.edu" port="22" rootFolder="/home/st/pfunda" accessType="SFTP">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
