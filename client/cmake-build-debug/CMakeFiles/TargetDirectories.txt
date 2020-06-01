@@ -1,0 +1,3 @@
+/Users/AJ/Desktop/SU/CPCS/CPSC 5042-02/client-server/client/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/AJ/Desktop/SU/CPCS/CPSC 5042-02/client-server/client/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/AJ/Desktop/SU/CPCS/CPSC 5042-02/client-server/client/cmake-build-debug/CMakeFiles/client.dir
