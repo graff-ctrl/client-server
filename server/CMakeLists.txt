@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(server)
+project(client-server)
 
 set(CMAKE_CXX_STANDARD 14)
 
