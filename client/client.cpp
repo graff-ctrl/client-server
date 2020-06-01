@@ -45,7 +45,7 @@ int incrementRPC(int & sock, char *buff)
     char buffer[1024] = { 0 };
     send(sock, buff, strlen(buff), 0);
     printf("Hello message sent\n");
-    if (strcmp(buff, "QUIT") == 0) {
+    if (strcmp(buff, "disconnect") == 0) {
         return 0;
     }
     else {
@@ -109,24 +109,27 @@ int main(int argc, char const *argv[])
 
     status = connectToServer((char *) argv[1], (char *) argv[2], sock);
     // Asking user to input credentials to connect to server (user input always in main).
-    char username[20];
-    char password[20];
+    //char username[20];
+    //char password[20];
 
-    std::cout << "\nEnter Username:";
+/*  std::cout << "\nEnter Username:";
     std::cin >> username;
     std::cout << "\nEnter Password:";
     std::cin >> password;
     connectRPC(username,password, buff);
-    incrementRPC(sock, buff);
+    incrementRPC(sock, buff);*/
 
     for (int i = 0; i < 20; i++) {
-        strcpy(buff, "QUOTE");
+
+        strcpy(buff, "rpc=advice;");
         incrementRPC(sock, buff);
         sleep(2);
-        strcpy(buff, "15");
+        strcpy(buff, "rpc=tip;");
+        incrementRPC(sock, buff);
+        strcpy(buff, "rpc=quote;");
         incrementRPC(sock, buff);
     }
-    strcpy(buff, "QUIT");
+    strcpy(buff, "rpc=disconnect;");
     incrementRPC(sock, buff);
 
     status = disconnectServer(sock);

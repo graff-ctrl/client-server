@@ -16,7 +16,7 @@ using namespace std;
 //Chang port to your unique port
 #define PORT 12008
 
-// Class to set up server
+
 class KeyValue
 {
 private:
@@ -52,6 +52,19 @@ public:
     }
 
 };
+
+
+// This class will take a string that is passed to it in this format:
+
+// input to constructor:
+// <variable1>=<value1>;<variable2>=<value2>;
+//You will then call the method  getNextKeyValue until getNextKeyValue returns NULL.
+// getNextKeyValue will return a KeyValue object. Inside of that KeyValue object will contain the variable and the value
+// You will then call getKey or getValue to get the contents of those fields.
+// The example in main() will show how to call this function.
+// By extracting the contents you then can determine the rpc you need to switch to, along with variables you will need
+// You can also use this class in your client program, since you will need to determine the contents that you receive from server
+
 class RawKeyValueString
 {
 private:
@@ -96,6 +109,95 @@ public:
     }
 
 };
+
+void Connect(char *buffer)
+{
+    //CODE
+}
+
+void Disconnect(char *buffer)
+{
+    const char *disconnect = "disconnect";
+    strcpy(buffer, disconnect);
+}
+
+void Quote(char *buffer)
+{
+    //CODE
+}
+
+void Advice(char *buffer)
+{
+    //CODE
+}
+void Tip(char *buffer)
+{
+    //CODE
+}
+
+// Function to parse buffer from client for RPC call.
+int parseBuffer(char *buff)
+{
+    // Create a couple of buffers, and see if works
+    //const char *szTest1 = "rpc=connect;user=mike;password=123;";
+    RawKeyValueString *pRawKey = new RawKeyValueString((char *)buff);
+    KeyValue rpcKeyValue;
+    char *pszRpcKey;
+    char *pszRpcValue;
+
+    // Figure out which rpc it is
+
+    pRawKey->getNextKeyValue(rpcKeyValue);
+    pszRpcKey = rpcKeyValue.getKey();
+    pszRpcValue = rpcKeyValue.getValue();
+
+    if (strcmp(pszRpcKey, "rpc") == 0)
+    {
+        if (strcmp(pszRpcValue, "connect") == 0)
+        {
+            // Get the next two arguments (user and password);
+            KeyValue userKeyValue;
+            KeyValue passKeyValue;
+
+            [[maybe_unused]] char *pszUserKey;
+            [[maybe_unused]] char *pszUserValue;
+            [[maybe_unused]] char *pszPassKey;
+            [[maybe_unused]] char *pszPassValue;
+            //int status;
+
+            pRawKey->getNextKeyValue(userKeyValue);
+            pszUserKey = userKeyValue.getKey();
+            pszUserValue = userKeyValue.getValue();
+
+            pRawKey->getNextKeyValue(passKeyValue);
+            pszPassKey = passKeyValue.getKey();
+            pszPassValue = passKeyValue.getValue();
+
+            //status = Connect(pszUserValue, pszPassValue);
+        }
+        if (strcmp(pszRpcValue, "disconnect") == 0)
+        {
+
+            printf("Client wants to disconnect\n");
+            Disconnect(buff);
+        }
+        if (strcmp(pszRpcValue, "quote") == 0)
+        {
+            printf("Client wants a quote\n");
+        }
+        if (strcmp(pszRpcValue, "tip") == 0)
+        {
+            printf("Client wants a tip\n");
+        }
+        if (strcmp(pszRpcValue, "advice") == 0)
+        {
+            printf("Client wants advice\n");
+        }
+    }
+    return 0;
+}
+
+// Class to set up server
 class ServerSetup
 {
     int connectionAmount, rpcAmount, nSocket; // Number of Connections, RPC Counter, Socket
@@ -158,6 +260,7 @@ public:
     }
 
 };
+
 class ConnectionContextData
 {
     // You will put in your own "Global Data" that you will share among all the various client connections you have. Change your "getters" to reflect that
@@ -291,8 +394,9 @@ void *rpcThread(void *arg)
     int nSocket = *(int*)socket;
     int valread;
     char buffer[1024] = {0};
+    char call[1024] = {0};
     void *status = NULL;
-    const char *invalid = "INVALID";
+    [[maybe_unused]]const char *invalid = "INVALID";
 
 
     ServerSetup *pntrServerStartup = (ServerSetup *) arg;
@@ -301,7 +405,9 @@ void *rpcThread(void *arg)
     for (;;){
         const char *statusOK = "STATUS=OK";
         valread = (int)read(nSocket, (void*) buffer, (size_t)1024);
-        if (strcmp(buffer, "QUIT") == 0)
+        strcpy(call, buffer);
+        parseBuffer(call);
+        if (strcmp(call, "disconnect") == 0)
         {
             connectionObj->addRpcAmount();
             pntrServerStartup->incRpcCalls();
@@ -309,16 +415,13 @@ void *rpcThread(void *arg)
                     ,pntrServerStartup->getRpcTotals());
             pthread_exit(status);
         }
-        if (strcmp(buffer, "QUOTE") == 0){
-            printf("Quote for socket %d: Make the most of today.", nSocket);
-        }
         int incAmt = atoi((char const*) buffer);
         connectionObj->addSumAmount(incAmt);
         connectionObj->addRpcAmount();
         pntrServerStartup->incRpcCalls();
         printf("%s Bytes read = %d  from socket %d\n", buffer, valread, nSocket);
         printf("sumAmt=%d  ThreadRPCAmt=%d\n", connectionObj->getSumAmount(), connectionObj->getRpcAmount());
-        send(nSocket, statusOK, strlen(statusOK), 0);
+        send(nSocket, call, strlen(statusOK), 0);
 
         printf("Response message sent.\n");
 
@@ -328,47 +431,7 @@ void *rpcThread(void *arg)
     return NULL;
 
 }
-/*int processRPC(char *szTest1){
-    // Create a couple of buffers, and see if works
-    //const char *szTest1 = "rpc=connect;user=mike;password=123;";
-    RawKeyValueString *pRawKey = new RawKeyValueString((char *)szTest1);
-    KeyValue rpcKeyValue;
-    char *pszRpcKey;
-    char *pszRpcValue;
 
-    // Figure out which rpc it is
-
-    pRawKey->getNextKeyValue(rpcKeyValue);
-    pszRpcKey = rpcKeyValue.getKey();
-    pszRpcValue = rpcKeyValue.getValue();
-
-    if (strcmp(pszRpcKey, "rpc") == 0)
-    {
-        if (strcmp(pszRpcValue, "connect") == 0)
-        {
-            // Get the next two arguments (user and password);
-            KeyValue userKeyValue;
-            KeyValue passKeyValue;
-
-            char *pszUserKey;
-            char *pszUserValue;
-            char *pszPassKey;
-            char *pszPassValue;
-            int status;
-
-            pRawKey->getNextKeyValue(userKeyValue);
-            pszUserKey = userKeyValue.getKey();
-            pszUserValue = userKeyValue.getValue();
-
-            pRawKey->getNextKeyValue(passKeyValue);
-            pszPassKey = passKeyValue.getKey();
-            pszPassValue = passKeyValue.getValue();
-
-            //status = Connect(pszUserValue, pszPassValue);
-        }
-    }
-    return 0;
-}*/
 int main(int argc, char const *arg[])
 {
     pthread_t pthread;
@@ -377,7 +440,7 @@ int main(int argc, char const *arg[])
     Server *server = new Server(PORT);
     ServerSetup *serverDataObj = new ServerSetup();
     int rpcAmount = serverDataObj->getRpcTotals();
-    printf("Total Server PRC Count: %d\n", rpcAmount);
+    printf("Total Server RPC Count: %d\n", rpcAmount);
     server->serverStartup();
 
     do {
@@ -387,7 +450,7 @@ int main(int argc, char const *arg[])
             printf("Error");
             status = -1;
         }
-        server->chatter(newSocket);
+        //server->chatter(newSocket);
         serverDataObj->setSocket(newSocket);
         pthread_create(&pthread, NULL, rpcThread, (void *) serverDataObj);
         printf("Server started thread.");
