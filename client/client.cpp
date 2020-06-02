@@ -1,5 +1,4 @@
 
-
 // Client side C/C++ program to demonstrate Socket programming
 #include <stdio.h>
 #include <iostream>
@@ -12,17 +11,17 @@
 #define PORT 12008
 
 
-
-int foobarRPC()
-{
-    return 0;
-}
-
+/**
+ * This function handles the requests to connect/disconnect threads to the server.
+ * @param sock - the current client's socket ID
+ * @param buff - the character buffer to send/return messagages between servers
+ * @return - status ID
+ */
 int incrementRPC(int & sock, const char *buff)
 {
     char buffer[1024] = { 0 };
     send(sock, buff, strlen(buff), 0);
-    //printf("Hello message sent\n");
+
     if (strcmp(buff, "rpc=disconnect;") == 0) {
         read(sock, buffer, 1024);
         printf("%s\n", buffer);
@@ -35,6 +34,13 @@ int incrementRPC(int & sock, const char *buff)
     return 0;
 }
 
+/**
+ * This function makes the initial connection to the server.
+ * @param szHostName - the IP address of the server (cs1)
+ * @param szPort - the server port number. Note: unique to each cs1 user.
+ * @param sock - the socket ID
+ * @return - function status
+ */
 int connectToServer(char *szHostName, char *szPort, int & sock)
 {
 
@@ -70,13 +76,26 @@ int connectToServer(char *szHostName, char *szPort, int & sock)
     return 0;
 }
 
-//Function to disconnect from server.
+/**
+ * This function disconnects the current client thread from the server.
+ * @param sock - socket ID
+ * @return - error status
+ */
 int disconnectServer(int sock)
 {
     int status;
     status = close(sock);
     return status;
 }
+
+/**
+ * This function reads in console input username and password credentials,
+ * reformats, and sends to the server.
+ * @param userName - client's username
+ * @param password - client's password
+ * @param buff - message buffer to server
+ * @return - error status
+ */
 int connectRPC(char *userName, char *password, char *buff)
 {
     const char *un = "rpc=connect;username=";
@@ -89,7 +108,11 @@ int connectRPC(char *userName, char *password, char *buff)
     return 0;
 }
 
-//Function to send disconnect RPC to server.
+/**
+ * This function disconnects the client thread from the server.
+ * @param sock - socket ID
+ * @return - error status
+ */
 int disconnectRPC(int & sock)
 {
     const char *disconnect = "rpc=disconnect;";
@@ -98,7 +121,12 @@ int disconnectRPC(int & sock)
 
 }
 
-//Function to send Tip RPC to server.
+/**
+ * This function sends a formatted RPC call to the server requesting a
+ * Tip.
+ * @param sock - socket ID
+ * @return - error status
+ */
 int tipRPC(int & sock)
 {
     const char *tip = "rpc=tip;";
@@ -106,7 +134,12 @@ int tipRPC(int & sock)
     return 0;
 }
 
-//Function to send advice RPC to server.
+/**
+ * This function sends a formatted RPC call to the server requesting
+ * Advice.
+ * @param sock - socket ID
+ * @return - error status
+ */
 int adviceRPC(int & sock)
 {
     const char *advice = "rpc=advice;";
@@ -114,7 +147,12 @@ int adviceRPC(int & sock)
     return 0;
 }
 
-//Function to send Quote RPC to server.
+/**
+ * This function sends a formatted RPC call to the server requesting a
+ * Quote.
+ * @param sock - socket ID
+ * @return - error status
+ */
 int quoteRPC(int & sock)
 {
     const char *quote = "rpc=quote;";
@@ -122,9 +160,18 @@ int quoteRPC(int & sock)
     return 0;
 }
 
+/**
+ * This is the driver of the client thread. Note: for the purposes of
+ * the demonstration, the typical commandline interactive client RPC
+ * calls have been replaced with an automated testing process.
+ * Interactive code has been commnented out for reference.
+ * The loop was removed for demonstration clarity.
+ *
+ * argv - IP Address of Server (127.0.0.1), Port Number (12008)
+ * return - error status
+ */
 int main(int argc, char const *argv[])
 {
-
     // send port number from server in command line (i.e. ./client 127.0.0.1 12008)
     int sock = 0;
     int status;
@@ -142,6 +189,8 @@ int main(int argc, char const *argv[])
     std::cin >> password;
     connectRPC(username,password, buff);
     incrementRPC(sock, buff);*/
+
+    // Automated Test of RPC functionality
     printf("Testing Connect RPC with incorrect credentials.\n");
     const char *badCreds = "rpc=connect;user=falseadmin;password=falsepass;";
     incrementRPC(sock, badCreds);
