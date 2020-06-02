@@ -126,8 +126,14 @@ void Disconnect(char *buffer)
 
 void Quote(char *buffer)
 {
+    //Create temp char array
+    //Open file
+    //Read file until % into char array
+    //Copy temp to buffer
+    //Close file.
   const int SIZE = 1024;
-  char temp[SIZE][SIZE]; //2D Array
+  //char temp[SIZE][SIZE]; //2D Array
+  char temp[1024];
   int colIndex = 0;
   int rowIndex = 0;
   int randomNumber = rand() % 10 + 1;
@@ -152,6 +158,7 @@ void Quote(char *buffer)
 
     // overwrite buffer
     strcpy(buffer, temp[colIndex]);;
+    file.close();
   } 
 }
 
@@ -239,6 +246,7 @@ int parseBuffer(char *buff)
         if (strcmp(pszRpcValue, "quote") == 0)
         {
             printf("Client wants a quote\n");
+            //Send to Quote();
         }
         if (strcmp(pszRpcValue, "tip") == 0)
         {
@@ -450,17 +458,13 @@ void *rpcThread(void *arg)
 {
     int nSocket = *(int*)socket;
     int valread;
-
     void *status = NULL;
     [[maybe_unused]]const char *invalid = "INVALID";
-
-
     ServerSetup *pntrServerStartup = (ServerSetup *) arg;
     nSocket = pntrServerStartup->getSocket();
     ConnectionContextData *connectionObj = new ConnectionContextData();
     for (;;){
         char buffer[1024] = {0};
-        const char *statusOK = "STATUS=OK";
         valread = (int)read(nSocket, (void*) buffer, (size_t)1024);
         char call[1024] = {0};
         strcpy(call, buffer);

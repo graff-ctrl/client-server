@@ -12,17 +12,7 @@
 #define PORT 12008
 
 //Funtion to connect to server.
-int connectRPC(char *userName, char *password, char *buff)
-{
-    const char *un = "rpc=connect;username=";
-    const char *pw = ";password=";
-    strcpy(buff, un);
-    strcat(buff, userName);
-    strcat(buff, pw);
-    strcat(buff, password);
-    printf("%s", buff);
-    return 0;
-}
+
 
 int disconnectRPC()
 {
@@ -94,13 +84,44 @@ int disconnectServer(int sock)
     status = close(sock);
     return status;
 }
-
-int Disconnect(int & sock)
+int connectRPC(char *userName, char *password, char *buff)
+{
+    const char *un = "rpc=connect;username=";
+    const char *pw = ";password=";
+    strcpy(buff, un);
+    strcat(buff, userName);
+    strcat(buff, pw);
+    strcat(buff, password);
+    printf("%s", buff);
+    return 0;
+}
+int disconnectRPC(int & sock)
 {
     const char *disconnect = "rpc=disconnect;";
     incrementRPC(sock, disconnect);
     return 0;
 
+}
+
+int tipRPC(int & sock)
+{
+    const char *tip = "rpc=tip;";
+    incrementRPC(sock, tip);
+    return 0;
+}
+
+int adviceRPC(int & sock)
+{
+    const char *advice = "rpc=advice;";
+    incrementRPC(sock, advice);
+    return 0;
+}
+
+int quoteRPC(int & sock)
+{
+    const char *quote = "rpc=quote;";
+    incrementRPC(sock, quote);
+    return 0;
 }
 
 int main(int argc, char const *argv[])
@@ -110,9 +131,9 @@ int main(int argc, char const *argv[])
     int sock = 0;
     int status;
     //char buff[1024];
-    const char *tip = "rpc=tip;";
-    const char *advice = "rpc=advice;";
-    const char *quote = "rpc=quote;";
+//    const char *tip = "rpc=tip;";
+//    const char *advice = "rpc=advice;";
+//    const char *quote = "rpc=quote;";
     // We will find out how many times to send our hello
 
     status = connectToServer((char *) argv[1], (char *) argv[2], sock);
@@ -127,17 +148,16 @@ int main(int argc, char const *argv[])
     connectRPC(username,password, buff);
     incrementRPC(sock, buff);*/
 
-    for (int i = 0; i < 10; i++) {
-
-        incrementRPC(sock, tip);
+    for (int i = 0; i < 10; i++)
+    {
+        tipRPC(sock);
         sleep(1);
-        incrementRPC(sock, advice);
+        adviceRPC(sock);
         sleep (1);
-        incrementRPC(sock, quote);
-        sleep (1);
-
+        //quoteRPC(sock);
+        //sleep (1);
     }
-    Disconnect(sock);
+    disconnectRPC(sock);
     //incrementRPC(sock, buff);
 
     status = disconnectServer(sock);
