@@ -20,16 +20,15 @@ int foobarRPC()
 
 int incrementRPC(int & sock, const char *buff)
 {
-    size_t valRead=0;
     char buffer[1024] = { 0 };
     send(sock, buff, strlen(buff), 0);
-    printf("Hello message sent\n");
+    //printf("Hello message sent\n");
     if (strcmp(buff, "rpc=disconnect;") == 0) {
         return 0;
     }
     else {
-        valRead = read(sock, buffer, 1024);
-        printf("ValRead=%lu buffer=%s\n", valRead, buffer);
+        read(sock, buffer, 1024);
+        printf("%s\n", buffer);
     }
     return 0;
 }

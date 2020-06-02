@@ -113,14 +113,16 @@ public:
 
 };
 
-void Connect(char *buffer, char *name)
+int connectRPC(char *username, char *password)
 {
-    const char *connected = ", you are now connected.";
-    strcpy(buffer, name);
-    strcat(buffer, connected);
+    if (strcmp(username, "admin") == 0 && strcmp(password, "pass") == 0)
+    {
+        return 0;
+    }
+    return -1;
 }
 
-void Disconnect(char *buffer)
+void disconnectRPC(char *buffer)
 {
     const char *disconnect = "rpc=disconnect;";
     strcpy(buffer, disconnect);
@@ -229,6 +231,9 @@ int parseBuffer(char *buff, char *response)
             [[maybe_unused]] char *pszPassKey;
             [[maybe_unused]] char *pszPassValue;
             //int status;
+            [[maybe_unused]] char username[15];
+            [[maybe_unused]] char password[15];
+
 
             pRawKey->getNextKeyValue(userKeyValue);
             pszUserKey = userKeyValue.getKey();
@@ -238,16 +243,24 @@ int parseBuffer(char *buff, char *response)
             pszPassKey = passKeyValue.getKey();
             pszPassValue = passKeyValue.getValue();
 
-            if (strcmp(pszUserValue, "admin") == 0 && strcmp(pszPassValue, "pass") == 0)
+            //strcpy(username, pszUserValue);
+            //strcpy(password, pszPassValue);
+
+            if (connectRPC(pszUserValue,pszPassValue) == 0)
             {
-                Connect(response, pszUserValue);
+                const char *success = "You are connected.";
+                strcpy(response, success);
+            }
+            else{
+                const char *fail = "User=Invalid";
+                strcpy(response, fail);
             }
         }
         if (strcmp(pszRpcValue, "disconnect") == 0)
         {
 
             printf("Client wants to disconnect\n");
-            Disconnect(response);
+            disconnectRPC(response);
         }
         if (strcmp(pszRpcValue, "quote") == 0)
         {
