@@ -24,6 +24,8 @@ int incrementRPC(int & sock, const char *buff)
     send(sock, buff, strlen(buff), 0);
     //printf("Hello message sent\n");
     if (strcmp(buff, "rpc=disconnect;") == 0) {
+        read(sock, buffer, 1024);
+        printf("%s\n", buffer);
         return 0;
     }
     else {
@@ -140,21 +142,24 @@ int main(int argc, char const *argv[])
     std::cin >> password;
     connectRPC(username,password, buff);
     incrementRPC(sock, buff);*/
-    printf("Testing credentials.\n");
-    const char *creds = "rpc=connect;user=admin;password=pass;";
-    incrementRPC(sock, creds);
-    printf("Testing Tip RPC\n");
+    printf("Testing Connect RPC with incorrect credentials.\n");
+    const char *badCreds = "rpc=connect;user=falseadmin;password=falsepass;";
+    incrementRPC(sock, badCreds);
+    sleep(3);
+    printf("\nTesting Connect RPC correct credentials.\n");
+    const char *goodCreds = "rpc=connect;user=admin;password=pass;";
+    incrementRPC(sock, goodCreds);
+    sleep (3);
+    printf("\nTesting Tip RPC\n");
     tipRPC(sock);
-    sleep(10);
-    printf("Testing Advice RPC\n");
+    sleep(3);
+    printf("\nTesting Advice RPC\n");
     adviceRPC(sock);
-    sleep (10);
+    sleep (3);
         //quoteRPC(sock);
         //sleep (1);
-
+    printf("\nTesting Disconnect RPC\n");
     disconnectRPC(sock);
-    //incrementRPC(sock, buff);
-
     status = disconnectServer(sock);
 
     return status;

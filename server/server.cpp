@@ -124,7 +124,7 @@ int connectRPC(char *username, char *password)
 
 void disconnectRPC(char *buffer)
 {
-    const char *disconnect = "rpc=disconnect;";
+    const char *disconnect = "You are disconnected.";
     strcpy(buffer, disconnect);
 }
 
@@ -492,6 +492,7 @@ void *rpcThread(void *arg)
             pntrServerStartup->incRpcCalls();
             printf("Client with socket %d has disconnected.\nTotal RPC count: %d\n", nSocket
                     ,pntrServerStartup->getRpcTotals());
+            send(nSocket, response, strlen(response), 0);
             pthread_exit(status);
         }
         int incAmt = atoi((char const*) buffer);
