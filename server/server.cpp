@@ -1,6 +1,5 @@
 #include <cstdio>
 
-
 // Server side C/C++ program to demonstrate Socket programming
 #include <unistd.h>
 #include <stdio.h>
@@ -8,11 +7,9 @@
 #include <stdlib.h> 
 #include <netinet/in.h>
 #include <string.h>
-//#include <bits/stdc++.h>
 #include <assert.h>
 #include <pthread.h>
 #include <fstream> // allow access to files
-
 
 
 using namespace std;
@@ -125,6 +122,7 @@ int connectRPC(char *username, char *password)
     }
     return -1;
 }
+
 /*
  * Function modifies response buffer to send back to client on a disconnect RPC call.
  *
@@ -135,12 +133,16 @@ void disconnectRPC(char *buffer)
     strcpy(buffer, disconnect);
 }
 
-// global variable test
+// RPC call server variables/storage
 char TipList[100][1024];
 char AdviceList[100][1024];
 char QuoteList[100][1024];
 int lenTipList, lenAdviceList, lenQuoteList;
 
+/*
+ * This function initializes the RPC call lists at start-up to avoid
+ * re-reading text files for each call.
+ * */
 void RPCTest() {
 
     // Read in Tips from file, store in class variable
@@ -149,13 +151,11 @@ void RPCTest() {
     int lineCT = 0;
 
     while (fgets(line, sizeof(line), file)) {
-        /* note that fgets don't strip the terminating \n, checking its
-           presence would allow to handle lines longer that sizeof(line) */
-        strcpy(TipList[lineCT],line);
+        strcpy(TipList[lineCT],line);   // write to app. list
         lineCT += 1;
     }
-    /* may check feof here to make a difference between eof and io failure -- network
-       timeout for instance */
+
+    // record file length for bounds
     lenTipList = lineCT -1;
     fclose(file);
 
@@ -164,13 +164,10 @@ void RPCTest() {
     lineCT = 0;
 
     while (fgets(line, sizeof(line), file)) {
-        /* note that fgets don't strip the terminating \n, checking its
-           presence would allow to handle lines longer that sizeof(line) */
         strcpy(AdviceList[lineCT],line);
         lineCT += 1;
     }
-    /* may check feof here to make a difference between eof and io failure -- network
-       timeout for instance */
+
     lenAdviceList = lineCT -1;
     fclose(file);
 
@@ -179,17 +176,19 @@ void RPCTest() {
     lineCT = 0;
 
     while (fgets(line, sizeof(line), file)) {
-        /* note that fgets don't strip the terminating \n, checking its
-           presence would allow to handle lines longer that sizeof(line) */
         strcpy(QuoteList[lineCT],line);
         lineCT += 1;
     }
-    /* may check feof here to make a difference between eof and io failure -- network
-       timeout for instance */
+
     lenQuoteList = lineCT -1;
     fclose(file);
 }
 
+/*
+ * This RPC call will randomly pick a quote from QuoteList
+ * and overwrite the buffer to be returned to the appropriate
+ * client.
+ * */
 void Quote(char *buffer)
 {
     // pick random index w/in bounds
@@ -207,6 +206,11 @@ void Quote(char *buffer)
     strcpy(buffer, newstr);
 }
 
+/**
+ * This RPC call will randomly pick a quote from AdviceList
+ * and overwrite the buffer to be returned to the app.
+ * client.
+ */
 void Advice(char *buffer)
 {
     // pick random index w/in bounds
@@ -224,7 +228,11 @@ void Advice(char *buffer)
     strcpy(buffer, newstr);
 }
 
-
+/**
+ * This RPC call will randomly pick a quote from TipList
+ * and overwrite the buffer to be returned to the app.
+ * client.
+ */
 void Tip(char *buffer)
 {
     // pick random index w/in bounds
@@ -570,7 +578,7 @@ int main(int argc, char const *argv[])
     printf("Total Server RPC Count: %d\n", rpcAmount);
     server->serverStartup();
 
-    // test
+    // Read in Advices/Tips/Quotes from .txt files into program memory
     RPCTest();
 
     do {
