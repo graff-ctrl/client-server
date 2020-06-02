@@ -175,9 +175,10 @@ void disconnectRPC(char *buffer)
 
 void Advice(char *buffer)
 {
-    const char *advice = "Advice: This is your advice.\n";
+    const char *advice = "Advice: Life is a fucking nightmare.\n";
     strcpy(buffer, advice);
 }
+
 void Tip(char *buffer)
 {
     // declare vars
@@ -508,7 +509,7 @@ void *rpcThread(void *arg)
         connectionObj->addSumAmount(incAmt);
         connectionObj->addRpcAmount();
         pntrServerStartup->incRpcCalls();
-        printf("%s Bytes read = %d  from socket %d\n", buffer, valread, nSocket);
+        printf("RPC call from client = %s\nBytes read = %d  from socket %d\n", buffer, valread, nSocket);
         printf("sumAmt=%d  ThreadRPCAmt=%d\n", connectionObj->getSumAmount(), connectionObj->getRpcAmount());
         send(nSocket, response, strlen(response), 0);
 
