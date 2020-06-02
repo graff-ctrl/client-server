@@ -5,12 +5,15 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/socket.h>
-#include <stdlib.h>
+#include <stdlib.h> 
 #include <netinet/in.h>
 #include <string.h>
 //#include <bits/stdc++.h>
 #include <assert.h>
 #include <pthread.h>
+#include <fstream> // allow access to files
+
+
 
 using namespace std;
 //Chang port to your unique port
@@ -123,7 +126,33 @@ void Disconnect(char *buffer)
 
 void Quote(char *buffer)
 {
-    //CODE
+  const int SIZE = 1024;
+  char temp[SIZE][SIZE]; //2D Array
+  int colIndex = 0;
+  int rowIndex = 0;
+  int randomNumber = rand() % 10 + 1;
+
+  fstream file; // reference file
+  char input[SIZE] = ""; // read from file
+  file.open("startrek.txt"); // direct to file address
+
+  while(file>>input){
+      if(input == "%"){
+        colIndex++;
+        rowIndex = 0;
+      }
+    else{
+
+        for(int i = 0; i < SIZE; i++){
+            temp[rowIndex][colIndex] = input[i];
+            rowIndex++;
+        }    
+    }
+    colIndex = randomNumber;
+
+    // overwrite buffer
+    strcpy(buffer, temp[colIndex]);;
+  } 
 }
 
 void Advice(char *buffer)
