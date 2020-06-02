@@ -113,6 +113,10 @@ public:
 
 };
 
+/*
+ * This fucntion takes in the username and password to vailidate it is the user and password. Expansion would
+ * include searching for username and password as a key:value pair in a map.
+ */
 int connectRPC(char *username, char *password)
 {
     if (strcmp(username, "admin") == 0 && strcmp(password, "pass") == 0)
@@ -121,7 +125,10 @@ int connectRPC(char *username, char *password)
     }
     return -1;
 }
-
+/*
+ * Function modifies response buffer to send back to client on a disconnect RPC call.
+ *
+ */
 void disconnectRPC(char *buffer)
 {
     const char *disconnect = "You are disconnected.";
@@ -202,7 +209,10 @@ void Tip(char *buffer)
     strcpy(buffer, newstr);
 }
 
-// Function to parse buffer from client for RPC call.
+/*
+ * This function parses the buffer returned from client and responds based on the particular RPC call being made.
+ *
+ */
 int parseBuffer(char *buff, char *response)
 {
     // Create a couple of buffers, and see if works
@@ -212,7 +222,6 @@ int parseBuffer(char *buff, char *response)
     char *pszRpcKey;
     char *pszRpcValue;
 
-    // Figure out which rpc it is
 
     pRawKey->getNextKeyValue(rpcKeyValue);
     pszRpcKey = rpcKeyValue.getKey();
@@ -281,7 +290,9 @@ int parseBuffer(char *buff, char *response)
     return 0;
 }
 
-// Class to set up server
+/*
+ * This class sets up the server threads for the server.
+ */
 class ServerSetup
 {
     int connectionAmount, rpcAmount, nSocket; // Number of Connections, RPC Counter, Socket
@@ -291,6 +302,7 @@ class ServerSetup
     int nMax;
 
 public:
+    //Constructor
     ServerSetup()
     {
         connectionAmount = 0;
@@ -345,11 +357,17 @@ public:
 
 };
 
+/*
+ * This class is "Global Data" that you will share among all the various client connections you have.
+ * Change your "getters" to reflect that.
+ */
 class ConnectionContextData
 {
-    // You will put in your own "Global Data" that you will share among all the various client connections you have. Change your "getters" to reflect that
+    // You will put in your own "Global Data" that you will share among all the various client connections you have.
+    // Change your "getters" to reflect that
 
 public:
+    //Constuctor.
     ConnectionContextData()
     {
         rpcAmount = 0;
@@ -380,6 +398,9 @@ private:
 
 };
 
+/*
+ * This class contains all server functions for starting the server.
+ */
 class Server
 {
 private:
@@ -450,22 +471,6 @@ public:
         return new_socket;
     }
 
-    int chatter(int new_socket)
-    {
-        int valread;
-        char buffer[1024] = {0};
-        const char *welcome = "Welcome to the Server";
-        valread = (int) read(new_socket, (void*) buffer, (size_t) 1024);
-        printf("%s Bytes in message = %d\n", buffer, valread);
-        // What RPC is it
-        // Parse out arguments
-        // Call the correct RPC Function
-        send(new_socket, welcome, strlen(welcome), 0);
-        printf("Hello message sent.");
-        return 0;
-
-    }
-
     int closeServer()
     {
         return 0;
@@ -473,6 +478,9 @@ public:
 
 };
 
+/*
+ * This function handles the individual calls from the clients on each thread.
+ */
 void *rpcThread(void *arg)
 {
     int nSocket = *(int*)socket;
@@ -481,6 +489,7 @@ void *rpcThread(void *arg)
     ServerSetup *pntrServerStartup = (ServerSetup *) arg;
     nSocket = pntrServerStartup->getSocket();
     ConnectionContextData *connectionObj = new ConnectionContextData();
+    //Loop to handle calls from client.
     for (;;){
         char buffer[1024] = {0};
         char response[1024];
@@ -512,11 +521,15 @@ void *rpcThread(void *arg)
 
 }
 
-int main(int argc, char const *arg[])
+int main(int argc, char const *argv[])
 {
     pthread_t pthread;
     int status;
+    // Code to be used for final project (takes in port number from command line).
     //int argPort = atoi((char const *) argv[1]);
+    //Server *server = new Server(argPort);
+
+    //For testing, port set to default port.
     Server *server = new Server(PORT);
     ServerSetup *serverDataObj = new ServerSetup();
     int rpcAmount = serverDataObj->getRpcTotals();
@@ -525,13 +538,14 @@ int main(int argc, char const *arg[])
 
     do {
         int newSocket = server->newConnection();
+        //Socket Error
         if (newSocket <= 0)
         {
             printf("Error");
             status = -1;
         }
-        //server->chatter(newSocket);
         serverDataObj->setSocket(newSocket);
+        //Start thread for client.
         pthread_create(&pthread, NULL, rpcThread, (void *) serverDataObj);
         printf("\nServer started thread.\n\n");
         } while (status == 0);
