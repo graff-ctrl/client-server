@@ -191,23 +191,34 @@ int main(int argc, char const *argv[])
     incrementRPC(sock, buff);*/
 
     // Automated Test of RPC functionality
+    // Connect RPC with incorrect credentials.
     printf("Testing Connect RPC with incorrect credentials.\n");
     const char *badCreds = "rpc=connect;user=falseadmin;password=falsepass;";
     incrementRPC(sock, badCreds);
     sleep(3);
+
+    // Connect RPC with correct credentials.
     printf("\nTesting Connect RPC correct credentials.\n");
     const char *goodCreds = "rpc=connect;user=admin;password=pass;";
     incrementRPC(sock, goodCreds);
     sleep (3);
+
+    // Tip RPC
     printf("\nTesting Tip RPC\n");
     tipRPC(sock);
     sleep(3);
+
+    //Adivce RPC
     printf("\nTesting Advice RPC\n");
     adviceRPC(sock);
     sleep (3);
+
+    //Quote RPC
     printf("\nTesting Quote RPC\n");
     quoteRPC(sock);
     sleep (1);
+
+    //Disconnect RPC
     printf("\nTesting Disconnect RPC\n");
     disconnectRPC(sock);
     status = disconnectServer(sock);
