@@ -36,16 +36,13 @@ int foobarRPC()
     return 0;
 }
 
-int incrementRPC(int & sock, char *buff)
+int incrementRPC(int & sock, const char *buff)
 {
     size_t valRead=0;
-    char hello[24];
-    strcpy(hello,"Hello from client");
-
     char buffer[1024] = { 0 };
     send(sock, buff, strlen(buff), 0);
     printf("Hello message sent\n");
-    if (strcmp(buff, "disconnect") == 0) {
+    if (strcmp(buff, "rpc=disconnect;") == 0) {
         return 0;
     }
     else {
@@ -98,13 +95,24 @@ int disconnectServer(int sock)
     return status;
 }
 
+int Disconnect(int & sock)
+{
+    const char *disconnect = "rpc=disconnect;";
+    incrementRPC(sock, disconnect);
+    return 0;
+
+}
+
 int main(int argc, char const *argv[])
 {
 
 // send port number from server in command line (i.e. ./client 127.0.0.1 12008)
     int sock = 0;
     int status;
-    char buff[1024];
+    //char buff[1024];
+    const char *tip = "rpc=tip;";
+    const char *advice = "rpc=advice;";
+    const char *quote = "rpc=quote;";
     // We will find out how many times to send our hello
 
     status = connectToServer((char *) argv[1], (char *) argv[2], sock);
@@ -119,18 +127,18 @@ int main(int argc, char const *argv[])
     connectRPC(username,password, buff);
     incrementRPC(sock, buff);*/
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 10; i++) {
 
-        strcpy(buff, "rpc=advice;");
-        incrementRPC(sock, buff);
-        sleep(2);
-        strcpy(buff, "rpc=tip;");
-        incrementRPC(sock, buff);
-        strcpy(buff, "rpc=quote;");
-        incrementRPC(sock, buff);
+        incrementRPC(sock, tip);
+        sleep(1);
+        incrementRPC(sock, advice);
+        sleep (1);
+        incrementRPC(sock, quote);
+        sleep (1);
+
     }
-    strcpy(buff, "rpc=disconnect;");
-    incrementRPC(sock, buff);
+    Disconnect(sock);
+    //incrementRPC(sock, buff);
 
     status = disconnectServer(sock);
 

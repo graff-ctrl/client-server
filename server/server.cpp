@@ -421,8 +421,7 @@ void *rpcThread(void *arg)
 {
     int nSocket = *(int*)socket;
     int valread;
-    char buffer[1024] = {0};
-    char call[1024] = {0};
+
     void *status = NULL;
     [[maybe_unused]]const char *invalid = "INVALID";
 
@@ -431,8 +430,10 @@ void *rpcThread(void *arg)
     nSocket = pntrServerStartup->getSocket();
     ConnectionContextData *connectionObj = new ConnectionContextData();
     for (;;){
+        char buffer[1024] = {0};
         const char *statusOK = "STATUS=OK";
         valread = (int)read(nSocket, (void*) buffer, (size_t)1024);
+        char call[1024] = {0};
         strcpy(call, buffer);
         parseBuffer(call);
         if (strcmp(call, "disconnect") == 0)
@@ -481,6 +482,6 @@ int main(int argc, char const *arg[])
         //server->chatter(newSocket);
         serverDataObj->setSocket(newSocket);
         pthread_create(&pthread, NULL, rpcThread, (void *) serverDataObj);
-        printf("Server started thread.");
+        printf("Server started thread.\n");
         } while (status == 0);
 }
