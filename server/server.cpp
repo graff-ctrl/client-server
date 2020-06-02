@@ -13,7 +13,7 @@
 
 
 using namespace std;
-//Chang port to your unique port
+//Change port to your unique port
 #define PORT 12015
 
 
@@ -47,24 +47,24 @@ public:
 
     char *getValue()
     {
-
         return m_szValue;
     }
-
 };
 
 
-// This class will take a string that is passed to it in this format:
-
-// input to constructor:
-// <variable1>=<value1>;<variable2>=<value2>;
-//You will then call the method  getNextKeyValue until getNextKeyValue returns NULL.
-// getNextKeyValue will return a KeyValue object. Inside of that KeyValue object will contain the variable and the value
-// You will then call getKey or getValue to get the contents of those fields.
-// The example in main() will show how to call this function.
-// By extracting the contents you then can determine the rpc you need to switch to, along with variables you will need
-// You can also use this class in your client program, since you will need to determine the contents that you receive from server
-
+/**
+ * // This class will take a string that is passed to it in this format:
+ *
+ * input to constructor:
+ * <variable1>=<value1>;<variable2>=<value2>;
+ * You will then call the method  getNextKeyValue until getNextKeyValue returns NULL.
+ * getNextKeyValue will return a KeyValue object. Inside of that KeyValue object will contain the variable and the value
+ * You will then call getKey or getValue to get the contents of those fields.
+ * The example in main() will show how to call this function.
+ * By extracting the contents you then can determine the rpc you need to switch to, along with variables you will need
+ * You can also use this class in your client program, since you will need to determine the contents that you receive
+ * from server
+ */
 class RawKeyValueString
 {
 private:
@@ -73,6 +73,7 @@ private:
     int m_currentPosition;
     KeyValue *m_pKeyValue;
     char *m_pch;
+
 public:
 
     RawKeyValueString(char *szUnformattedString)
@@ -91,7 +92,8 @@ public:
 
     void getNextKeyValue(KeyValue & keyVal)
     {
-        // It will attempt to parse out part of the string all the way up to the ";", it will then create a new KeyValue object  with that partial string
+        // It will attempt to parse out part of the string all the way up to the ";", it will then create a new
+        // KeyValue object  with that partial string
         // If it can;t it will return null;
         char *pch1;
         char szTemp[32768];
@@ -110,8 +112,8 @@ public:
 
 };
 
-/*
- * This fucntion takes in the username and password to vailidate it is the user and password. Expansion would
+/**
+ * This function takes in the username and password to vailidate it is the user and password. Expansion would
  * include searching for username and password as a key:value pair in a map.
  */
 int connectRPC(char *username, char *password)
@@ -123,9 +125,8 @@ int connectRPC(char *username, char *password)
     return -1;
 }
 
-/*
+/**
  * Function modifies response buffer to send back to client on a disconnect RPC call.
- *
  */
 void disconnectRPC(char *buffer)
 {
@@ -139,10 +140,10 @@ char AdviceList[100][1024];
 char QuoteList[100][1024];
 int lenTipList, lenAdviceList, lenQuoteList;
 
-/*
+/**
  * This function initializes the RPC call lists at start-up to avoid
  * re-reading text files for each call.
- * */
+ */
 void RPCTest() {
 
     // Read in Tips from file, store in class variable
@@ -184,11 +185,11 @@ void RPCTest() {
     fclose(file);
 }
 
-/*
+/**
  * This RPC call will randomly pick a quote from QuoteList
  * and overwrite the buffer to be returned to the appropriate
  * client.
- * */
+ */
 void Quote(char *buffer)
 {
     // pick random index w/in bounds
@@ -251,9 +252,8 @@ void Tip(char *buffer)
 }
 
 
-/*
+/**
  * This function parses the buffer returned from client and responds based on the particular RPC call being made.
- *
  */
 int parseBuffer(char *buff, char *response)
 {
@@ -332,7 +332,7 @@ int parseBuffer(char *buff, char *response)
     return 0;
 }
 
-/*
+/**
  * This class sets up the server threads for the server.
  */
 class ServerSetup
@@ -399,7 +399,7 @@ public:
 
 };
 
-/*
+/**
  * This class is "Global Data" that you will share among all the various client connections you have.
  * Change your "getters" to reflect that.
  */
@@ -440,7 +440,7 @@ private:
 
 };
 
-/*
+/**
  * This class contains all server functions for starting the server.
  */
 class Server
@@ -520,7 +520,7 @@ public:
 
 };
 
-/*
+/**
  * This function handles the individual calls from the clients on each thread.
  */
 void *rpcThread(void *arg)
@@ -567,12 +567,11 @@ int main(int argc, char const *argv[])
 {
     pthread_t pthread;
     int status;
-    // Code to be used for final project (takes in port number from command line).
-    //int argPort = atoi((char const *) argv[1]);
-    //Server *server = new Server(argPort);
 
-    //For testing, port set to default port.
-    Server *server = new Server(PORT);
+    // get port ID from commandline input
+    int argPort = atoi((char const *) argv[1]);
+    Server *server = new Server(argPort);
+
     ServerSetup *serverDataObj = new ServerSetup();
     int rpcAmount = serverDataObj->getRpcTotals();
     printf("Total Server RPC Count: %d\n", rpcAmount);
