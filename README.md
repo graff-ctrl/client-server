@@ -1,5 +1,5 @@
 # client-server
-Client server project for CPSC 5042
+Client server project for CPSC 5042-02
 
 This is a client server project for educational purposes only. 
 
@@ -12,7 +12,7 @@ The main objective is to create two pieces of software (Client and Server) that 
 
 You will be required to make a connection from the Client to the Server (using Socket and bind calls).  I would like you to create 5 RPC's. The first RPC will be the toughest, as you will have to create all the scaffolding and plumbing on both the client and server pieces. I have split the project into three major milestones that are listed below:
 
-Milestone 1 - Design and Create simple Client/Server Applications.
+Milestone 2 - Design and Create simple Client/Server Applications.
 
 Requirements:
 
@@ -38,17 +38,20 @@ The three other RPC's can be coded and tested later
 You will put the Client code in "client.cpp" and the Server code in "server.cpp"
 You will have a make file that will build these components
 You will put some debug messages into both client and server code that will end up going to stdout
-The deliverable will be:
-milestone1.pdf which contains:
-A two paragraph summary of project
-A listing of all five RPC's (including connect and disconnect). Please add any description to what the RPC is, and description to your input/output variable
-Output (taken from screen) that shows your client and server running
-Instructions on how you made and started your client and server binaries
-milestone1.zip which contains:
+
+Milestone 2 Deliverables:
+An updated milestone1.pdf with relevant changes in project scope and direction including:
+    - A two paragraph summary of project
+    - A listing of all five RPC's (including connect and disconnect). Please add any description to what the RPC is,
+      and description to your input/output variable
+Instructions on how you made and started your client and server binaries (This Read-Me File)
+milestone2.zip which contains:
 client.cpp
 server.cpp
-makefile 
+makefile
 client and server binaries
+RPC Content Lists as .txt files (AdviceList.txt, TipList.txt, and QuoteList.txt)
+
 
 With the architecture in place, this particular Milestone is actually fairly easy. Requirements are:
 
@@ -64,6 +67,15 @@ Run the program multiple times at once (5 occurence). Please have the diagnostic
 Create a small Powerpoint that will describe your RPC's  and program. It should be about a 10 minute presentation (as a general rule one slide per minute)
 
 
+Compiling Notes on CS1:
 Server: g++ -o server -lpthread server.cpp
-
 Client: g++ -o client client.cpp
+
+Calling Executables Notes:
+Server: ./server 12015
+(User's unique Port Number)
+Client: ./client 127.0.0.1 12015
+(Server's IP Address and User's unique Port Number)
+
+Note: Server and Client Port Numbers must be equivalent.
+
