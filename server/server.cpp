@@ -113,18 +113,20 @@ public:
 
 };
 
-void Connect(char *buffer)
+void Connect(char *buffer, char *name)
 {
-    //CODE
+    const char *connected = ", you are now connected.";
+    strcpy(buffer, name);
+    strcat(buffer, connected);
 }
 
 void Disconnect(char *buffer)
 {
-    const char *disconnect = "disconnect";
+    const char *disconnect = "rpc=disconnect;";
     strcpy(buffer, disconnect);
 }
 
-void Quote(char *buffer)
+/*void Quote(char *buffer)
 {
     //Create temp char array
     //Open file
@@ -152,19 +154,20 @@ void Quote(char *buffer)
         for(int i = 0; i < SIZE; i++){
             temp[rowIndex][colIndex] = input[i];
             rowIndex++;
-        }    
+        }
     }
     colIndex = randomNumber;
 
     // overwrite buffer
     strcpy(buffer, temp[colIndex]);;
     file.close();
-  } 
-}
+  }
+}*/
 
 void Advice(char *buffer)
 {
-    //CODE
+    const char *advice = "Advice: This is your advice.\n";
+    strcpy(buffer, advice);
 }
 void Tip(char *buffer)
 {
@@ -198,7 +201,7 @@ void Tip(char *buffer)
 }
 
 // Function to parse buffer from client for RPC call.
-int parseBuffer(char *buff)
+int parseBuffer(char *buff, char *response)
 {
     // Create a couple of buffers, and see if works
     //const char *szTest1 = "rpc=connect;user=mike;password=123;";
@@ -235,13 +238,16 @@ int parseBuffer(char *buff)
             pszPassKey = passKeyValue.getKey();
             pszPassValue = passKeyValue.getValue();
 
-            //status = Connect(pszUserValue, pszPassValue);
+            if (strcmp(pszUserValue, "admin") == 0 && strcmp(pszPassValue, "pass") == 0)
+            {
+                Connect(response, pszUserValue);
+            }
         }
         if (strcmp(pszRpcValue, "disconnect") == 0)
         {
 
             printf("Client wants to disconnect\n");
-            Disconnect(buff);
+            Disconnect(response);
         }
         if (strcmp(pszRpcValue, "quote") == 0)
         {
@@ -251,12 +257,12 @@ int parseBuffer(char *buff)
         if (strcmp(pszRpcValue, "tip") == 0)
         {
             printf("Client wants a tip\n");
-            Tip(buff);
-            printf(buff);
+            Tip(response);
         }
         if (strcmp(pszRpcValue, "advice") == 0)
         {
             printf("Client wants advice\n");
+            Advice(response);
         }
     }
     return 0;
@@ -459,17 +465,15 @@ void *rpcThread(void *arg)
     int nSocket = *(int*)socket;
     int valread;
     void *status = NULL;
-    [[maybe_unused]]const char *invalid = "INVALID";
     ServerSetup *pntrServerStartup = (ServerSetup *) arg;
     nSocket = pntrServerStartup->getSocket();
     ConnectionContextData *connectionObj = new ConnectionContextData();
     for (;;){
         char buffer[1024] = {0};
+        char response[1024];
         valread = (int)read(nSocket, (void*) buffer, (size_t)1024);
-        char call[1024] = {0};
-        strcpy(call, buffer);
-        parseBuffer(call);
-        if (strcmp(call, "disconnect") == 0)
+        parseBuffer(buffer, response);
+        if (strcmp(buffer, "rpc=disconnect;") == 0 || strcmp(response, "rpc=disconnect;") == 0)
         {
             connectionObj->addRpcAmount();
             pntrServerStartup->incRpcCalls();
@@ -483,7 +487,7 @@ void *rpcThread(void *arg)
         pntrServerStartup->incRpcCalls();
         printf("%s Bytes read = %d  from socket %d\n", buffer, valread, nSocket);
         printf("sumAmt=%d  ThreadRPCAmt=%d\n", connectionObj->getSumAmount(), connectionObj->getRpcAmount());
-        send(nSocket, call, strlen(statusOK), 0);
+        send(nSocket, response, strlen(response), 0);
 
         printf("Response message sent.\n");
 
@@ -515,6 +519,6 @@ int main(int argc, char const *arg[])
         //server->chatter(newSocket);
         serverDataObj->setSocket(newSocket);
         pthread_create(&pthread, NULL, rpcThread, (void *) serverDataObj);
-        printf("Server started thread.\n");
+        printf("\nServer started thread.\n\n");
         } while (status == 0);
 }

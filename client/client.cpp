@@ -11,15 +11,7 @@
 #include <assert.h>
 #define PORT 12008
 
-//Funtion to connect to server.
 
-
-int disconnectRPC()
-{
-    // input format="rpc=disconnect"
-    // output format="status=<error status>; error=<error or blank>;
-    return 0;
-}
 
 int foobarRPC()
 {
@@ -77,7 +69,7 @@ int connectToServer(char *szHostName, char *szPort, int & sock)
     return 0;
 }
 
-
+//Function to disconnect from server.
 int disconnectServer(int sock)
 {
     int status;
@@ -95,6 +87,8 @@ int connectRPC(char *userName, char *password, char *buff)
     printf("%s", buff);
     return 0;
 }
+
+//Function to send disconnect RPC to server.
 int disconnectRPC(int & sock)
 {
     const char *disconnect = "rpc=disconnect;";
@@ -103,6 +97,7 @@ int disconnectRPC(int & sock)
 
 }
 
+//Function to send Tip RPC to server.
 int tipRPC(int & sock)
 {
     const char *tip = "rpc=tip;";
@@ -110,6 +105,7 @@ int tipRPC(int & sock)
     return 0;
 }
 
+//Function to send advice RPC to server.
 int adviceRPC(int & sock)
 {
     const char *advice = "rpc=advice;";
@@ -117,6 +113,7 @@ int adviceRPC(int & sock)
     return 0;
 }
 
+//Function to send Quote RPC to server.
 int quoteRPC(int & sock)
 {
     const char *quote = "rpc=quote;";
@@ -127,15 +124,12 @@ int quoteRPC(int & sock)
 int main(int argc, char const *argv[])
 {
 
-// send port number from server in command line (i.e. ./client 127.0.0.1 12008)
+    // send port number from server in command line (i.e. ./client 127.0.0.1 12008)
     int sock = 0;
     int status;
     //char buff[1024];
-//    const char *tip = "rpc=tip;";
-//    const char *advice = "rpc=advice;";
-//    const char *quote = "rpc=quote;";
-    // We will find out how many times to send our hello
 
+    //Status returned from command line arguments passed to conenctToServer function.
     status = connectToServer((char *) argv[1], (char *) argv[2], sock);
     // Asking user to input credentials to connect to server (user input always in main).
     //char username[20];
@@ -147,16 +141,18 @@ int main(int argc, char const *argv[])
     std::cin >> password;
     connectRPC(username,password, buff);
     incrementRPC(sock, buff);*/
-
-    for (int i = 0; i < 10; i++)
-    {
-        tipRPC(sock);
-        sleep(1);
-        adviceRPC(sock);
-        sleep (1);
+    printf("Testing credentials.\n");
+    const char *creds = "rpc=connect;user=admin;password=pass;";
+    incrementRPC(sock, creds);
+    printf("Testing Tip RPC\n");
+    tipRPC(sock);
+    sleep(10);
+    printf("Testing Advice RPC\n");
+    adviceRPC(sock);
+    sleep (10);
         //quoteRPC(sock);
         //sleep (1);
-    }
+
     disconnectRPC(sock);
     //incrementRPC(sock, buff);
 
