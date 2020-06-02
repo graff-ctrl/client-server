@@ -156,8 +156,9 @@ int main(int argc, char const *argv[])
     printf("\nTesting Advice RPC\n");
     adviceRPC(sock);
     sleep (3);
-        //quoteRPC(sock);
-        //sleep (1);
+    printf("\nTesting Quote RPC\n");
+    quoteRPC(sock);
+    sleep (1);
     printf("\nTesting Disconnect RPC\n");
     disconnectRPC(sock);
     status = disconnectServer(sock);

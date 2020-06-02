@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="2d5add0e-c3ab-426f-ade3-f0cefe53f679" name="cs1" url="http://cs1.seattleu.edu">
-        <fileTransfer host="cs1.seattleu.edu" port="22" rootFolder="/home/st/agraff" accessType="SFTP">
+      <webServer id="6aa905e8-b64a-42ff-ac3e-e5226996a839" name="CS1" url="http://cs1.seattleu.edu">
+        <fileTransfer host="cs1.seattleu.edu" port="22" rootFolder="/home/st/pfunda" accessType="SFTP">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

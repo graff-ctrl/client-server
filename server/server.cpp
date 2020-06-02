@@ -135,48 +135,104 @@ void disconnectRPC(char *buffer)
     strcpy(buffer, disconnect);
 }
 
-/*void Quote(char *buffer)
+void Quote(char *buffer)
 {
-    //Create temp char array
-    //Open file
-    //Read file until % into char array
-    //Copy temp to buffer
-    //Close file.
-  const int SIZE = 1024;
-  //char temp[SIZE][SIZE]; //2D Array
-  char temp[1024];
-  int colIndex = 0;
-  int rowIndex = 0;
-  int randomNumber = rand() % 10 + 1;
+//    //Create temp char array
+//    //Open file
+//    //Read file until % into char array
+//    //Copy temp to buffer
+//    //Close file.
+//  const int SIZE = 1024;
+//  //char temp[SIZE][SIZE]; //2D Array
+//  char temp[1024];
+//  int colIndex = 0;
+//  int rowIndex = 0;
+//  int randomNumber = rand() % 10 + 1;
+//
+//  fstream file; // reference file
+//  char input[SIZE] = ""; // read from file
+//  file.open("startrek.txt"); // direct to file address
+//
+//  while(file>>input){
+//      if(input == "%"){
+//        colIndex++;
+//        rowIndex = 0;
+//      }
+//    else{
+//
+//        for(int i = 0; i < SIZE; i++){
+//            temp[rowIndex][colIndex] = input[i];
+//            rowIndex++;
+//        }
+//    }
+//    colIndex = randomNumber;
+//
+//    // overwrite buffer
+//    strcpy(buffer, temp[colIndex]);;
+//    file.close();
+//  }
 
-  fstream file; // reference file
-  char input[SIZE] = ""; // read from file
-  file.open("startrek.txt"); // direct to file address
+    // declare vars
+    // char TipList[][1024];
+    int listInd;
 
-  while(file>>input){
-      if(input == "%"){
-        colIndex++;
-        rowIndex = 0;
-      }
-    else{
+    // create random number generator as class function?
+    // get random number w/in Tip list/database
+    // need to know size of Tip list/database to bound int generation
+    listInd = 1;
 
-        for(int i = 0; i < SIZE; i++){
-            temp[rowIndex][colIndex] = input[i];
-            rowIndex++;
-        }
-    }
-    colIndex = randomNumber;
+    // access Tip list/database
+    // if list, read in .txt file at startup, save as class var
+    // would that require putting RPC calls in separate class?
+    // hardcoded for now
+    char QuoteList[][1024] = {"Quote 1",
+                            "Agile! -other Mike",
+                            "Quote 3"};
+
+    // pull random tip from TipList
+    const char *curTip = QuoteList[listInd];
+
+    // append new line escape character
+    char *newstr = (char*)malloc(strlen(curTip) + 2);
+    strcpy(newstr, curTip);
+    strcat(newstr, "\n");
 
     // overwrite buffer
-    strcpy(buffer, temp[colIndex]);;
-    file.close();
-  }
-}*/
+    strcpy(buffer, newstr);
+}
 
 void Advice(char *buffer)
 {
-    const char *advice = "Advice: Life is a fucking nightmare.\n";
-    strcpy(buffer, advice);
+//    const char *advice = "Advice: Life is a fucking nightmare.\n";
+//    strcpy(buffer, advice);
+
+    // declare vars
+    // char TipList[][1024];
+    int listInd;
+
+    // create random number generator as class function?
+    // get random number w/in Tip list/database
+    // need to know size of Tip list/database to bound int generation
+    listInd = 1;
+
+    // access Tip list/database
+    // if list, read in .txt file at startup, save as class var
+    // would that require putting RPC calls in separate class?
+    // hardcoded for now
+    char AdviceList[][1024] = {"Advice 1",
+                            "Advice 2",
+                            "Advice 3"};
+
+    // pull random tip from TipList
+    const char *curTip = AdviceList[listInd];
+
+    // append new line escape character
+    char *newstr = (char*)malloc(strlen(curTip) + 2);
+    strcpy(newstr, curTip);
+    strcat(newstr, "\n");
+
+    // overwrite buffer
+    strcpy(buffer, newstr);
 }
 
 void Tip(char *buffer)
@@ -275,7 +331,7 @@ int parseBuffer(char *buff, char *response)
         if (strcmp(pszRpcValue, "quote") == 0)
         {
             printf("Client wants a quote\n");
-            //Send to Quote();
+            Quote(response);
         }
         if (strcmp(pszRpcValue, "tip") == 0)
         {
